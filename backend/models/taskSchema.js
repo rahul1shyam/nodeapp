@@ -2,12 +2,6 @@ const mongoose = require('mongoose');
 
 const {Schema} = mongoose;
 
-const userSchema = new Schema({
-    name : String,
-    phone: String,
-    password: String
-});
-
 const TaskSchema = new Schema({
     username : {
         type : "String",
@@ -23,7 +17,6 @@ const TaskSchema = new Schema({
     }
 });
 
-const userModel = mongoose.model('users',userSchema);
 const taskModel = mongoose.model('tasks', TaskSchema);
 
-module.exports = {userModel, taskModel};
+module.exports = { taskModel};

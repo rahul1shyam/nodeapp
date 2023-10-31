@@ -1,17 +1,18 @@
 const express = require('express');
 const app = express();
-const {userModel,taskModel} = require('./models/schema');
-const connectDB = require('./db/connect');
+const connectDB = require('./db/mongoDBconnect');
 
 connectDB();
-
-
-
-require('dotenv').config({path : "config/.env"})
+require('dotenv').config({path : "config/.env"});
 //middle ware
 
+
+const userRoutes = require('./routes/userRoutes');
+const taskRoutes = require('./routes/taskRoutes');
+
 app.use(express.json());
-app.use('/', require('./routes/routes'));
+app.use('/', userRoutes);
+app.use('/', taskRoutes);
 
 //server config
 PORT = process.env.PORT || 5000;
