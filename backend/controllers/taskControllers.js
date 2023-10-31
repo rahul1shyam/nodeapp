@@ -5,6 +5,7 @@ const {taskModel} = require('../models/taskSchema');
 const addTask = async (req,res) =>{
     const {username, task} = req.body;
     console.log("addtask");
+    console.log(req.cookies.jwt);
     
     if(!username || !task){
         return res.status(400).json({"error" : "Please fill required fields"});

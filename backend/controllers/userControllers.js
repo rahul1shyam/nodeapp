@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken'); 
 const {userModel} = require('../models/userSchema');
+const { encryptUser } = require('./jwt');
 
 const validateEmail = (email) => {
     return String(email)
@@ -31,11 +32,17 @@ const login = async (req,res)=>{
         return res.status(400).json({"error" : "Email Address not registered"});
     }
     
-    if(doesExistEmail.password!=password){
+    if(!doesExistEmail.password.match(password)){
         return res.status(401).json({"error" : "Wrong password"});
     }
-    
 
+    const userToken = await encryptUser(doesExistEmail); 
+    
+    res.cookie("jwt" ,userToken,{
+        httpOnly : true
+    });
+
+    console.log(req.cookies.jwt);
     return res.sendStatus(200);
 }
 
