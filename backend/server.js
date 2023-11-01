@@ -1,13 +1,14 @@
 const express = require('express');
 const app = express();
 const connectDB = require('./db/mongoDBconnect');
+const connectRedis = require('./db/redisConnect');
 const cookieParser = require('cookie-parser');
 
 connectDB();
+
+
 require('dotenv').config({path : "config/.env"});
 //middle ware
-
-
 const userRoutes = require('./routes/userRoutes');
 const taskRoutes = require('./routes/taskRoutes');
 

@@ -1,6 +1,6 @@
 
 const {taskModel} = require('../models/taskSchema');
-
+const  {getFromCatch, saveInCatch} = require('../db/redisConnect');
 
 const addTask = async (req,res) =>{
     const {task} = req.body;
@@ -40,13 +40,22 @@ const removeTask = async (req,res) =>{
 }
 
 const getTask = async (req,res) =>{
-
     try {
+        const data = await getFromCatch(req.email);
+        
+        console.log(data.status);
+        if(data.status=="CATCH HIT"){
+            console.log("data was in catch");
+            return res.status(200).json(data);
+        }
+        console.log("tasks");
+
         const tasks = await taskModel.find({email: req.email});
-        console.log("got all the tasks");
+        await saveInCatch(req.email, tasks);
+        console.log("data was not in the catch");
         return res.status(200).json(tasks);
     } catch (error) {
-        console.log('error');
+        console.log('error1');
         return res.status(400).json({"err" : error});
     }
 }
