@@ -3,17 +3,17 @@ const {taskModel} = require('../models/taskSchema');
 
 
 const addTask = async (req,res) =>{
-    const {username, task} = req.body;
+    const {task} = req.body;
+    const email = req.email;
     console.log("addtask");
-    console.log(req.cookies.jwt);
-    
-    if(!username || !task){
+    console.log(req.email);
+    if(!email || !task){
         return res.status(400).json({"error" : "Please fill required fields"});
     }
     try {        
         console.log('before adding');
         await taskModel({
-            username : username,
+            email : email,
             task : task,
             status : false
         }).save();
@@ -40,14 +40,14 @@ const removeTask = async (req,res) =>{
 }
 
 const getTask = async (req,res) =>{
-    const user = "rahul";
-    
+
     try {
-        
-         
+        const tasks = await taskModel.find({email: req.email});
+        console.log("got all the tasks");
+        return res.status(200).json(tasks);
     } catch (error) {
         console.log('error');
         return res.status(400).json({"err" : error});
     }
 }
-module.exports = {addTask,removeTask};
+module.exports = {addTask,removeTask,getTask};

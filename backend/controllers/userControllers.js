@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken'); 
 const {userModel} = require('../models/userSchema');
-const { encryptUser } = require('./jwt');
+const { encryptUser } = require('./auth');
 
 const validateEmail = (email) => {
     return String(email)
@@ -12,8 +12,7 @@ const validateEmail = (email) => {
 
 const login = async (req,res)=>{
     const {email,password} = req.body;
-    console.log(email,password);
-
+    
     if(!email || !password){
         console.log("missing fields");
         return res.status(400).json({"error " : "Please fill all the required fields"});
@@ -25,7 +24,6 @@ const login = async (req,res)=>{
     }
     const doesExistEmail = await userModel.findOne({email : email});
 
-    console.log(doesExistEmail);
 
     if(!doesExistEmail){
         console.log('Email not registered');
@@ -38,12 +36,11 @@ const login = async (req,res)=>{
 
     const userToken = await encryptUser(doesExistEmail); 
     
-    res.cookie("jwt" ,userToken,{
-        httpOnly : true
-    });
+    res.cookie("jwt",userToken);
 
-    console.log(req.cookies.jwt);
-    return res.sendStatus(200);
+    console.log(`SuccessFully logged in as ${doesExistEmail.name}`);
+
+    return res.status(200).send({success : true, jwt : req.cookies.jwt});
 }
 
 const register = async (req ,res) => {
