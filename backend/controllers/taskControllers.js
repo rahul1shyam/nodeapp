@@ -1,6 +1,6 @@
 
 const {taskModel} = require('../models/taskSchema');
-const  {getFromCatch, saveInCatch} = require('../db/redisConnect');
+const  {getFromCatch, saveInCatch, deleteKey} = require('../db/redisConnect');
 
 const addTask = async (req,res) =>{
     const {task} = req.body;
@@ -17,6 +17,8 @@ const addTask = async (req,res) =>{
             task : task,
             status : false
         }).save();
+
+        await deleteKey(req.email);
         console.log('added');
         return res.sendStatus(200);   
     } catch (error) {
@@ -30,7 +32,10 @@ const removeTask = async (req,res) =>{
     const id = req.params.id;
 
     try {
+        
         await taskModel.deleteOne({_id : id});
+        await deleteKey(req.email);
+
         console.log("removed");
         return res.sendStatus(200);
     } catch (error) {

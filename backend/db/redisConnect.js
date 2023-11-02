@@ -42,6 +42,25 @@ const saveInCatch = async (key, data) =>{
         console.log(error);        
     }
 }
+const deleteKey = async (key)=>{
+    
+    try {
+        const client = await redis.createClient(process.env.REDIS_HOST, process.env.REDIS_PORT);
+        client.on('error', (err)=>{
+            console.error(err.message)
+        })
+        await client.connect();
+        
+        client.del(key);
+
+    } catch (error) {
+        console.log(error);
+        
+    }
 
 
-module.exports = {getFromCatch, saveInCatch};
+
+}
+
+
+module.exports = {getFromCatch, saveInCatch,deleteKey};

@@ -6,7 +6,7 @@ const { auth } = require('../controllers/auth');
 
 
 router.post('/addTask',auth,taskControl.addTask);
-router.post('/removeTask/:id',auth,taskControl.removeTask);
+router.delete('/removeTask/:id',auth,taskControl.removeTask);
 router.get('/getTask',auth,taskControl.getTask);
 
 module.exports = router;
